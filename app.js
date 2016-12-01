@@ -18,8 +18,6 @@ mongoose.Promise = global.Promise
 // connect to database
 app.db = mongoose.connect(process.env.MONGODB_URI);
 
-// view engine setup - this app uses Hogan-Express
-// https://github.com/vol4ok/hogan-express
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
 app.set('layout','layout');

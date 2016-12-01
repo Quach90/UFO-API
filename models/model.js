@@ -1,8 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-// See http://mongoosejs.com/docs/schematypes.html
-
 var ufoSchema = new Schema({
 	city: String,
 	date: Date,

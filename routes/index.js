@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
-var fs = require('fs');
 var geocoder = require('geocoder');
 var request = require('request');
 var cheerio = require('cheerio');
@@ -75,8 +74,6 @@ function addLocation(i, ufoToLog, locationToRequest) {
                             mongoMsg: error.message
                         };
                         console.log(errorJson);
-                        // console.log(error);
-                        // return res.json(errorJson);
                     } else {
                         console.log("Ufo added")
                     }
@@ -96,7 +93,6 @@ function addLocation(i, ufoToLog, locationToRequest) {
                             mongoMsg: error.message
                         };
                         console.log(errorJson);
-                        // console.log(error);
                     } else {
                         console.log("Ufo added")
                     }
@@ -141,7 +137,6 @@ router.get('/api/sightings/location/near', function(req, res) {
         // Geocoding
         geocoder.geocode(req.query.location, function(err, data) {
             if (data.status == "OK") {
-                console.log();
                 var lat = data.results[0].geometry.location.lat;
                 var lon = data.results[0].geometry.location.lng;
 
@@ -206,7 +201,6 @@ router.get('/api/sightings/location/bbox', function(req, res) {
             [coordinates[0], coordinates[1]],
             [coordinates[2], coordinates[3]]
         ];
-        console.log(box)
         boundingBox(box);
     } else if (req.query.location) {
         geocoder.geocode(location, function(err, data) {
@@ -215,7 +209,6 @@ router.get('/api/sightings/location/bbox', function(req, res) {
                     [data.results[0].geometry.bounds.southwest.lng, data.results[0].geometry.bounds.southwest.lat],
                     [data.results[0].geometry.bounds.northeast.lng, data.results[0].geometry.bounds.northeast.lat]
                 ];
-                console.log(box)
                 boundingBox(box);
             } else {
                 var error = {
@@ -270,8 +263,6 @@ router.get('/api/sightings/location/bbox', function(req, res) {
 
 router.get('/api/sightings/search', function(req, res) {
 
-    console.log(req.query);
-
     var queryObject = req.query;
 
     var filterObject = {}
@@ -302,7 +293,6 @@ router.get('/api/sightings/search', function(req, res) {
             return res.json(error)
         }
         endDate.setMinutes(endDate.getMinutes() - endDate.getTimezoneOffset())
-        console.log(endDate);
         dateQuery['$lt'] = endDate;
     }
     if (Object.keys(dateQuery).length > 0) {
@@ -324,15 +314,12 @@ router.get('/api/sightings/search', function(req, res) {
         filterObject['city'] = new RegExp('^' + queryObject.city + '$', "i")
     }
 
-    console.log(filterObject)
-
     var setOptions = {}
     setOptions.skip = req.query.skip ? Number(req.query.skip) : 0;
     setOptions.limit = req.query.limit ? Number(req.query.limit) : 100;
 
-    // mongoose method to find all, see http://mongoosejs.com/docs/api.html#model_Model.find
+
     Ufo.find(filterObject).setOptions(setOptions).exec(function(err, data) {
-        // if err or no animals found, respond with error
         if (err || data == null) {
             var error = {
                 status: 'ERROR',
@@ -354,199 +341,5 @@ router.get('/api/sightings/search', function(req, res) {
     })
 
 })
-
-// /**
-//  * GET '/api/get/:year'
-//  * Receives a GET request to get all animal details
-//  * @return {Object} JSON
-//  */
-
-// router.get('/api/get/:year', function(req, res) {
-//
-//     var year = req.params.year;
-//     var startDate = new Date(year, 0, 1);
-//     startDate.setMinutes(startDate.getMinutes() - startDate.getTimezoneOffset());
-//     var endDate = new Date(year, 0, 1);
-//     endDate.setYear(endDate.getYear() + 1);
-//     endDate.setMinutes(endDate.getMinutes() - endDate.getTimezoneOffset());
-//
-//     // mongoose method to find all, see http://mongoosejs.com/docs/api.html#model_Model.find
-//     Ufo.find().where('date').gte(startDate).lt(endDate).exec(function(err, data) {
-//         // if err or no animals found, respond with error
-//         if (err || data == null) {
-//             var error = {
-//                 status: 'ERROR',
-//                 message: 'Could not find animals'
-//             };
-//             return res.json(error);
-//         }
-//
-//         // otherwise, respond with the data
-//
-//         var jsonData = {
-//             status: 'OK',
-//             sightings: data
-//         }
-//
-//         res.json(jsonData);
-//
-//     })
-//
-// })
-
-// /**
-//  * GET '/api/get/:year/:month'
-//  * Receives a GET request to get all animal details
-//  * @return {Object} JSON
-//  */
-
-// router.get('/api/get/:year/:month', function(req, res) {
-//
-//     var year = req.params.year;
-//     var month = Number(req.params.month) - 1;
-//     var startDate = new Date(year, month, 1);
-//     startDate.setMinutes(startDate.getMinutes() - startDate.getTimezoneOffset())
-//     var endDate = new Date(year, month, 1);
-//     endDate.setMonth(endDate.getMonth() + 1);
-//     endDate.setMinutes(endDate.getMinutes() - endDate.getTimezoneOffset())
-//
-//     // mongoose method to find all, see http://mongoosejs.com/docs/api.html#model_Model.find
-//     Ufo.find().where('date').gte(startDate).lt(endDate).exec(function(err, data) {
-//         // if err or no animals found, respond with error
-//         if (err || data == null) {
-//             var error = {
-//                 status: 'ERROR',
-//                 message: 'Could not find animals'
-//             };
-//             return res.json(error);
-//         }
-//
-//         // otherwise, respond with the data
-//
-//         var jsonData = {
-//             status: 'OK',
-//             sightings: data
-//         }
-//
-//         res.json(jsonData);
-//
-//     })
-//
-// })
-
-// /**
-//  * GET '/api/get/:year/:month/:day'
-//  * Receives a GET request to get all animal details
-//  * @return {Object} JSON
-//  */
-
-// router.get('/api/get/:year/:month/:day', function(req, res) {
-//
-//     var year = req.params.year;
-//     var month = Number(req.params.month) - 1;
-//     var day = Number(req.params.day);
-//     var startDate = new Date(year, month, day);
-//     startDate.setMinutes(startDate.getMinutes() - startDate.getTimezoneOffset())
-//     var endDate = new Date(year, month, day + 1);
-//     endDate.setMinutes(endDate.getMinutes() - endDate.getTimezoneOffset())
-//
-//     // mongoose method to find all, see http://mongoosejs.com/docs/api.html#model_Model.find
-//     Ufo.find().where('date').gte(startDate).lt(endDate).exec(function(err, data) {
-//         // if err or no animals found, respond with error
-//         if (err || data == null) {
-//             var error = {
-//                 status: 'ERROR',
-//                 message: 'Could not find animals'
-//             };
-//             return res.json(error);
-//         }
-//
-//         // otherwise, respond with the data
-//
-//         var jsonData = {
-//             status: 'OK',
-//             sightings: data
-//         }
-//
-//         res.json(jsonData);
-//
-//     })
-//
-// })
-
-
-// router.get('/addJsonData', function(req, res) {
-//     // var num = req.params.num;
-//     var obj;
-//     var counter = 0;
-//     fs.readFile('dataFinal.json', 'utf8', function(err, data) {
-//         if (err) throw err;
-//         obj = JSON.parse(data);
-//         var reportsMonthly = obj.timeline;
-//         reportsMonthly.forEach(function(month, i) {
-//             // if( i >= 250){
-//               runReport(month, i)
-//             // }
-//         })
-//         res.send('Done')
-//     });
-//
-//
-//     // respond with json data
-//     // res.json(obj)
-// })
-//
-// var counter = 0;
-//
-// function runReport(month, i) {
-//     if(i < 250){
-//       setTimeout(runIt, i * 3000);
-//     } else {
-//       var time = 250 * 3000;
-//       setTimeout(runIt, (i-250 * 2000)+time);
-//     }
-//
-//
-//     function runIt() {
-//         month.reports.forEach(function(report, index) {
-//             var jsonToLog = report;
-//             var date = new Date(report.date);
-//             date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-//             jsonToLog.date = date;
-//             // jsonToLog.date = new Date(report.date);
-//             // jsonToLog.posted = new Date(report.posted);
-//             // jsonToLog.lon = report.long;
-//             jsonToLog.loc = [report.long, report.lat];
-//             delete jsonToLog.posted;
-//             delete jsonToLog.long;
-//             delete jsonToLog.lat;
-//
-//             // return console.log(jsonToLog);
-//
-//             var ufoSighting = new Ufo(jsonToLog);
-//
-//             ufoSighting.save(function(error, data) {
-//                 // if err saving, respond back with error
-//                 if (error) {
-//                     var errorJson = {
-//                         status: 'ERROR',
-//                         message: 'Error saving ufo'
-//                     };
-//                     console.log(errorJson);
-//                     console.log(error);
-//                     // return res.json(errorJson);
-//                 } else {
-//
-//                     counter++;
-//
-//                     if(counter%1000 == 0) console.log(counter);
-//                 }
-//
-//
-//             })
-//         })
-//         console.log("Done with " + i);
-//     }
-// }
 
 module.exports = router;
