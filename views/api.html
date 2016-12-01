@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <title>UFO API</title>
+        <link rel="stylesheet" href="css/api.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans|Raleway" rel="stylesheet">
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+
+        <!-- jQuery library -->
+        <script src="lib/jquery.min.js"></script>
+
+        <!-- Latest compiled JavaScript -->
+        <script src="lib/bootstrap.min.js"></script>
+
+        <script src="js/api.js"></script>
+    </head>
+
+    <body>
+        <nav class="navbar navbar-default navbar-static-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#home" id="logoButton">UFO API</a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav" role="tablist">
+                        <li role="presentation" class="active"><a href="#homeContent" aria-controls="homeContent" role="tab" data-toggle="tab" id="homeTab">Home</a></li>
+                        <li role="presentation"><a href="#docContent" aria-controls="docContent" role="tab" data-toggle="tab" id="docTab">Documentation</a></li>
+                        <li role="presentation"><a href="#queryContent" aria-controls="queryContent" role="tab" data-toggle="tab" id="queryTab">Query creator</a></li>
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+        <div class="container">
+            <!-- <div class="row text-center">
+                        <h1>UFO API</h1>
+                    <ul class="nav nav-tabs">
+                        <li role="presentation" id="docTab"><a href="#docs" id="docButton">Documentation</a></li>
+                        <li role="presentation" id="queryTab"><a href="#query" id="queryButton">Query creator</a></li>
+                    </ul>
+                </div> -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane fade in active" id="homeContent">
+                    <div class="row">
+                        <div class="col-lg-12">
+                          <h1>UFO API</h1>
+                            <div class="row">
+                                <div class="col-lg-6">
+
+                                    <p>
+                                        The UFO API is a collection of UFO Sigthings served through an API.
+                                    </p>
+                                    <p>
+                                        The original dataset is coming from <a href="http://www.nuforc.org/">The National UFO Reporting Center</a>. The data has been modified and augmented with location data, to allow location based searches.
+                                        Note that the returned location data is in (lon, lat) format.
+                                      </br>
+                                        An example of a visualization using this data can be found <a href="/">here</a>.
+                                    </p>
+                                    <h2>Queries</h2>
+                                    <p>
+                                        The API has three base queries. Each base query has a subset of query parameters, see the <a href="#" onClick="changeTab('doc')">docs</a> for more info.
+                                    </p>
+                                    <h3>Search</h3>
+                                    <p>
+                                        The search base query is used to only return UFO sightings that qualify a set of query parameters. Each query parameter is optional and can be shape, city, state or date.
+                                    </p>
+                                    <h3>Location Near</h3>
+                                    <p>
+                                        The location near base query is used to get UFO sigthings near a specific location, by supplying a center point and an optional radius to declare how big the area from which to returns sightings from should be.
+                                    </p>
+                                    <h3>Location Bounding Box</h3>
+                                    <p>
+                                        The location bounding box base query is used to get UFO sightings within bounding box. The box is defined by an upper right and a lower left corner.
+                                    </p>
+                                </div>
+                                <div class="col-lg-6">
+                                    <h2 class="noTopMargin">Sample response</h2>
+                                    <pre>
+{
+  "status": "OK",
+  "sightingsReturned": 100,
+  "sightings": [
+    "..."
+  ]
+}                                </pre>
+                                    <h2>Sample sighting</h2>
+                                    <pre>
+{
+    "_id": "5830744b10f7d4323bd0f769",
+    "city": "Sanborn",
+    "date": "2016-09-30T03:30:00.000Z",
+    "url": "http://www.nuforc.org/webreports/130/S130329.html",
+    "state": "NY",
+    "summary": "3 orbs dancing/chasing each other in circles in Sanborn, NY.  ((anonymous report))",
+    "duration": "10 minutes",
+    "shape": "Oval",
+    "loc": [
+      -78.884761,
+      43.136723
+    ],
+    "__v": 0,
+    "dateAdded": "2016-11-19T15:48:27.446Z"
+}
+</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="docContent">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h2>Search <small>/api/sightings/search</small></h2>
+                            <p>
+                                Search endpoint. The possible search parameters below are all optional and can be applied as needed.
+                            </p>
+                            <p>
+                        <strong>Example:</strong> <a href="/api/sightings/search?from=200/5/5&to=2016/8/7&shape=triangle&city=new%20york&state=ny&limit=50&skip=0">/api/sightings/search?from=200/5/5&to=2016/8/7&shape=triangle&city=new%20york&state=ny&limit=50&skip=0</a>
+                    </p>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">from</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <p>
+                                        Returns only sightings after this date (including).
+                                    </p>
+                                    <p>
+                                        <strong>Format:</strong> accepts any valid javascript <a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse'>Date string.</a>
+                                    </p>
+                                    <p>
+                                        <strong>Example:</strong> <i>from=2016/5/5</i>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">to</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <p>
+                                        Returns only sightings before this date (excluding).
+                                    </p>
+                                    <p>
+                                        <strong>Format:</strong> accepts any valid javascript <a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse'>Date string.</a>
+                                    </p>
+                                    <p>
+                                        <strong>Example:</strong> <i>to=2016/8/7</i>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">shape</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <p>
+                                        Returns only sightings with the requested shape.
+                                    </p>
+                                    <p>
+                                        <strong>Format:</strong> accepts any string (not case sensitive).
+                                    </p>
+                                    <p>
+                                        <strong>Example:</strong> <i>shape=triangle</i>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">city</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <p>
+                                        Returns only sightings with the requested city.
+                                    </p>
+                                    <p>
+                                        <strong>Format:</strong> accepts any string (not case sensitive).
+                                    </p>
+                                    <p>
+                                        <strong>Example:</strong> <i>city=new york</i>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">state</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <p>
+                                        Returns only sightings with the requested state.
+                                    </p>
+                                    <p>
+                                        <strong>Format:</strong> accepts any string (not case sensitive).
+                                    </p>
+                                    <p>
+                                        <strong>Example:</strong> <i>state=NY</i>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">limit</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <p>
+                                        Amount of sightings to return - default=100.
+                                    </p>
+                                    <p>
+                                        <strong>Format:</strong> number.
+                                    </p>
+                                    <p>
+                                        <strong>Example:</strong> <i>limit=50</i>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">skip</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <p>
+                                        Amount of sightings to skip.
+                                    </p>
+                                    <p>
+                                        <strong>Format:</strong> number.
+                                    </p>
+                                    <p>
+                                        <strong>Example:</strong> <i>skip=50</i>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h2>Location - Near <small>/api/sightings/location/near</small></h2>
+                            <p>
+                                Location near endpoint. This query takes in either lat/lon pair or a location, and returns all sightings within a specificed distance (radius) of the lat/lon. If no radius is supplied, all sightings will be returned, returning the closests sightings first.
+                            </p>
+                            <p>
+                              <strong>Required:</strong> lat/lon or a location.
+                            </p>
+                            <p>
+                    <strong>Example:</strong> <a href="/api/sightings/location/near?lat=40.7294285&lon=-73.9958957&radius=1000&limit=50&skip=0">/api/sightings/location/near?lat=40.7294285&lon=-73.9958957&radius=1000&limit=50&skip=0</a>
+                </p>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">lat</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <p>
+                                        The latitude for the center of the search. Must be used together with longitude.
+                                    </p>
+                                    <p>
+                                        <strong>Format:</strong> number between -90.0 and 90.0.
+                                    </p>
+                                    <p>
+                                        <strong>Example:</strong> <i>lat=40.7294285</i>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">lon</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <p>
+                                        The longitude for the center of the search. Must be used together with latitude.
+                                    </p>
+                                    <p>
+                                        <strong>Format:</strong> number between -180.0 and 180.0.
+                                    </p>
+                                    <p>
+                                        <strong>Example:</strong> <i>lon=-73.9958957</i>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">location</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <p>
+                                        String representation of a location. Is translated into lat/lon pair using a <a href="https://github.com/wyattdanger/geocoder">Geocoder</a>. If both lat/lon and location is specified, lat/lon pair is preferred.
+                                    </p>
+                                    <p>
+                                        <strong>Format:</strong> string, accepts anything Google accepts.
+                                    </p>
+                                    <p>
+                                        <strong>Example:</strong> <i>location=New York,NY</i>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">radius</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <p>
+                                        The radius defining the circle around the center location from which to include sightings from.
+                                    </p>
+                                    <p>
+                                        <strong>Format:</strong> number in meters.
+                                    </p>
+                                    <p>
+                                        <strong>Example:</strong> <i>radius=1000</i>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">limit</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <p>
+                                        Amount of sightings to return - default=100.
+                                    </p>
+                                    <p>
+                                        <strong>Format:</strong> number.
+                                    </p>
+                                    <p>
+                                        <strong>Example:</strong> <i>limit=50</i>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">skip</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <p>
+                                        Amount of sightings to skip.
+                                    </p>
+                                    <p>
+                                        <strong>Format:</strong> number.
+                                    </p>
+                                    <p>
+                                        <strong>Example:</strong> <i>skip=50</i>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h2>Location - Bounding Box <small>/api/sightings/location/bbox</small></h2>
+                            <p>
+                                Location bounding box endpoint. This query returns all sightings in the specified bounding box.
+                            </p>
+                            <p>
+                              <strong>Required:</strong> bbox or a location.
+                            </p>
+                            <p>
+                      <strong>Example:</strong> <a href="/api/sightings/location/bbox?bbox=-74.259,40.477,-73.700,40.917&limit=50&skip=0">/api/sightings/location/bbox?bbox=-74.259,40.477,-73.700,40.917&limit=50&skip=0</a>
+                  </p>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">bbox</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <p>
+                                        The bounding box coordinates for which to return sightings within. Specified as the lower left corner and upper right corner.
+                                    </p>
+                                    <p>
+                                        <strong>Format:</strong> comma seperated numbers (lowLon, lowLat, upLon, upLat).
+                                    </p>
+                                    <p>
+                                        <strong>Example:</strong> <i>bbox=-74.259,40.477,-73.700,40.917</i>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">location</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <p>
+                                        String representation of a location. Is translated into a bounding box using a <a href="https://github.com/wyattdanger/geocoder">Geocoder</a>. If both bbox and location is specified, bbox is preferred.
+                                    </p>
+                                    <p>
+                                        <strong>Format:</strong> string, accepts anything Google accepts.
+                                    </p>
+                                    <p>
+                                        <strong>Example:</strong> <i>location=New York,NY</i>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">limit</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <p>
+                                        Amount of sightings to return - default=100.
+                                    </p>
+                                    <p>
+                                        <strong>Format:</strong> number.
+                                    </p>
+                                    <p>
+                                        <strong>Example:</strong> <i>limit=50</i>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">skip</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <p>
+                                        Amount of sightings to skip.
+                                    </p>
+                                    <p>
+                                        <strong>Format:</strong> number.
+                                    </p>
+                                    <p>
+                                        <strong>Example:</strong> <i>skip=50</i>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="queryContent">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h2>Query <small id="fullQuery">/api/sightings<span id="base"></span><span id="fromSpan"></span><span id="toSpan"></span><span id="shapeSpan"></span><span id="citySpan"></span><span id="stateSpan"></span><span id="latSpan"></span><span id="lonSpan"></span><span id="bboxSpan"></span><span id="locationSpan"></span><span id="radiusSpan"></span><span id="limitSpan"></span><span id="skipSpan"></span></small></h2>
+                        </div>
+                        <div class="col-lg-6">
+                            <h2>Base</h2>
+                            <div class="btn-group" role="group" aria-label="..." id="baseQuery">
+                                <button type="button" class="btn btn-default" id="addSearch">/search</button>
+                                <button type="button" class="btn btn-default" id="addNear">/location/near</button>
+                                <button type="button" class="btn btn-default" id="addBbox">/location/bbox</button>
+                            </div>
+                            <div id="queryParams" style='display: none'>
+                                <h2>Query parameters</h2>
+                                <form class="form-horizontal" id="queryForm">
+                                    <div class="form-group" id="fromForm">
+                                        <label for="fromInput" class="col-sm-2 control-label">from</label>
+                                        <div class="col-sm-10">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control queryInputs" id="fromInput" disabled="true">
+                                                <span class="input-group-btn">
+                                            <button class="btn btn-default queryButtons" type="button" id="from">Add</button>
+                                          </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="toForm" style='display: none'>
+                                        <label for="toInput" class="col-sm-2 control-label">to</label>
+                                        <div class="col-sm-10">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control queryInputs" id="toInput" disabled="true">
+                                                <span class="input-group-btn">
+                                            <button class="btn btn-default queryButtons" type="button" id="to">Add</button>
+                                          </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="shapeForm" style='display: none'>
+                                        <label for="shapeInput" class="col-sm-2 control-label">shape</label>
+                                        <div class="col-sm-10">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control queryInputs" id="shapeInput" disabled="true">
+                                                <span class="input-group-btn">
+                                            <button class="btn btn-default queryButtons" type="button" id="shape">Add</button>
+                                          </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="cityForm" style='display: none'>
+                                        <label for="cityInput" class="col-sm-2 control-label">city</label>
+                                        <div class="col-sm-10">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control queryInputs" id="cityInput" disabled="true">
+                                                <span class="input-group-btn">
+                                            <button class="btn btn-default queryButtons" type="button" id="city">Add</button>
+                                          </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="stateForm" style='display: none'>
+                                        <label for="stateInput" class="col-sm-2 control-label">state</label>
+                                        <div class="col-sm-10">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control queryInputs" id="stateInput" disabled="true">
+                                                <span class="input-group-btn">
+                                            <button class="btn btn-default queryButtons" type="button" id="state">Add</button>
+                                          </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="latForm" style='display: none'>
+                                        <label for="latInput" class="col-sm-2 control-label">lat</label>
+                                        <div class="col-sm-10">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control queryInputs" id="latInput" disabled="true">
+                                                <span class="input-group-btn">
+                                            <button class="btn btn-default queryButtons" type="button" id="lat">Add</button>
+                                          </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="lonForm" style='display: none'>
+                                        <label for="lonInput" class="col-sm-2 control-label">lon</label>
+                                        <div class="col-sm-10">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control queryInputs" id="lonInput" disabled="true">
+                                                <span class="input-group-btn">
+                                            <button class="btn btn-default queryButtons" type="button" id="lon">Add</button>
+                                          </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="bboxForm" style='display: none'>
+                                        <label for="bboxInput" class="col-sm-2 control-label">bbox</label>
+                                        <div class="col-sm-10">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control queryInputs" id="bboxInput" disabled="true">
+                                                <span class="input-group-btn">
+                                            <button class="btn btn-default queryButtons" type="button" id="bbox">Add</button>
+                                          </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="locationForm" style='display: none'>
+                                        <label for="locationInput" class="col-sm-2 control-label">location</label>
+                                        <div class="col-sm-10">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control queryInputs" id="locationInput" disabled="true">
+                                                <span class="input-group-btn">
+                                            <button class="btn btn-default queryButtons" type="button" id="location">Add</button>
+                                          </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="radiusForm" style='display: none'>
+                                        <label for="radiusInput" class="col-sm-2 control-label">radius</label>
+                                        <div class="col-sm-10">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control queryInputs" id="radiusInput" disabled="true">
+                                                <span class="input-group-btn">
+                                            <button class="btn btn-default queryButtons" type="button" id="radius">Add</button>
+                                          </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="limitForm" style='display: none'>
+                                        <label for="limitInput" class="col-sm-2 control-label">limit</label>
+                                        <div class="col-sm-10">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control queryInputs" id="limitInput" disabled="true">
+                                                <span class="input-group-btn">
+                                            <button class="btn btn-default queryButtons" type="button" id="limit">Add</button>
+                                          </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="skipForm" style='display: none'>
+                                        <label for="skipInput" class="col-sm-2 control-label">skip</label>
+                                        <div class="col-sm-10">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control queryInputs" id="skipInput" disabled="true">
+                                                <span class="input-group-btn">
+                                            <button class="btn btn-default queryButtons" type="button" id="skip">Add</button>
+                                          </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                <!-- <div class="btn-group" role="group" aria-label="..." id="queryParams">
+                            <button type="button" class="btn btn-default" id="addSearch">/search</button>
+                            <button type="button" class="btn btn-default" id="addNear">/location/near</button>
+                            <button type="button" class="btn btn-default" id="addBbox">/location/bbox</button>
+                        </div> -->
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <h2>Response from API</h2>
+                                </div>
+                                <div class="col-lg-4">
+                                    <h2><button class="btn btn-default btn-block" type="button" id="requestApiBtn">Send request</button></h2>
+                                </div>
+                            </div>
+                            <div id="apiResponse">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="row">
+                <h2>Search</h2>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">/api/sightings/search{query}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                            Search endpoint. The following search parameters can be applied as needed:
+                        </p>
+
+                        <p>
+                            Ex: <a href="/api/sightings/shape/teardrop">/api/sightings/shape/teardrop</a>
+                        </p>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item"><strong>from</strong> - ex: <i>from=2016/5/5</i></li>
+                        <li class="list-group-item"><strong>to</strong> - ex: <i>to=2016/8/7</i></li>
+                        <li class="list-group-item"><strong>shape</strong> - ex: <i>shape=triangle</i></li>
+                        <li class="list-group-item"><strong>city</strong> - ex: <i>city=New York</i></li>
+                        <li class="list-group-item"><strong>state</strong> - ex: <i>state=NY</i></li>
+                    </ul>
+                </div>
+            </div> -->
+        </div>
+
+    </body>
+
+</html>

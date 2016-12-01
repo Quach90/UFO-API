@@ -1,0 +1,11 @@
+.hideContent {
+    display: none;
+}
+
+.noTopMargin{
+  margin-top: 0px !important;
+}
+
+pre {
+    background-color: #fff !important;
+}
