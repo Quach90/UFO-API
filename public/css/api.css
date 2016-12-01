@@ -7,5 +7,30 @@
 }
 
 pre {
+  font-family: monospace,monospace !important;
     background-color: #fff !important;
+}
+
+p{
+  font-family: 'Open Sans', sans-serif !important;
+}
+
+h1,
+h2,
+h3,
+button{
+  font-family: 'Raleway', sans-serif !important;
+}
+
+h3.panel-title{
+  font-weight: 600;
+}
+
+label{
+  font-family: 'Raleway', sans-serif !important;
+  font-weight: 600;
+}
+
+nav{
+  font-family: 'Raleway', sans-serif !important;
 }
