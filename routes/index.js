@@ -107,7 +107,7 @@ function addLocation(i, ufoToLog, locationToRequest) {
 }
 
 router.get('/', function(req, res) {
-    res.render('index.html')
+    res.redirect('/api');
 });
 
 router.get('/api', function(req, res) {
